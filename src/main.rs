@@ -12,11 +12,11 @@ async fn add_book() -> impl Responder {
     let client = DynamoDbClient::new(Region::UsEast1);
     let mut item: HashMap<String, AttributeValue> = HashMap::new();
     item.insert("bookId".into(), AttributeValue {
-        s: Some(String::from("1")),
+        s: Some(String::from("2")),
         ..Default::default()
     });
     item.insert("name".into(), AttributeValue {
-        s: Some(String::from("Welcome to AWS")),
+        s: Some(String::from("Welcome to AWS Dynamodb")),
         ..Default::default()
     });
     let put = PutItemInput {
