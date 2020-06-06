@@ -9,3 +9,5 @@ edition = "2018"
 [dependencies]
 actix-web = "2.0"
 actix-rt = "1.1.1"
+rusoto_dynamodb = "0.44.0"
+rusoto_core = "0.44.0"
