@@ -1,22 +1,27 @@
 use actix_web::{web, App, Responder, HttpServer, HttpResponse};
-use rusoto_core::Region;
-use rusoto_dynamodb::{DynamoDb, DynamoDbClient, ListTablesInput, PutItemInput, AttributeValue, PutItemOutput, PutItemError};
+use rusoto_core::{Region, RusotoError};
+use rusoto_dynamodb::{DynamoDb, DynamoDbClient, ListTablesInput, PutItemInput, AttributeValue, PutItemOutput, PutItemError, GetItemOutput, GetItemError};
 use std::collections::HashMap;
+use tokio_core::reactor::Core;
+use std::future::Future;
+
+use fake::{Dummy, Fake, Faker};
 
 
 async fn index() -> impl Responder {
-    "Hello world!"
+    println!("String {:?}", Faker.fake::<String>());
+    Faker.fake::<String>()
 }
 
 async fn add_book() -> impl Responder {
     let client = DynamoDbClient::new(Region::UsEast1);
     let mut item: HashMap<String, AttributeValue> = HashMap::new();
     item.insert("bookId".into(), AttributeValue {
-        s: Some(String::from("2")),
+        s: Some(String::from(Faker.fake::<String>())),
         ..Default::default()
     });
     item.insert("name".into(), AttributeValue {
-        s: Some(String::from("Welcome to AWS Dynamodb")),
+        s: Some(String::from(Faker.fake::<String>())),
         ..Default::default()
     });
     let put = PutItemInput {
@@ -65,6 +70,7 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .route("/books", web::post().to(add_book))
             .route("/books", web::get().to(get_books))
+            .route("/",web::get().to(index))
     })
         .bind("127.0.0.1:8088")?
         .run()
